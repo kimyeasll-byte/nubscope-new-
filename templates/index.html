@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NubScope — 태아 성별 예측기</title>
+  <meta name="description" content="초음파 사진으로 태아 성별을 예측하는 AI 기반 서비스. 각도법, 램지법, 중국 황실 달력을 종합 분석합니다." />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<!-- ══════ HEADER ══════ -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🔭</div>
+      <div class="logo-text">Nub<span>Scope</span></div>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-ko">한국어</button>
+      <button class="lang-btn" id="btn-en">English</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══════ MAIN ══════ -->
+<main class="container">
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1><span class="gradient" data-i18n="tagline">초음파 사진으로 태아 성별을 예측해보세요</span></h1>
+    <p data-i18n="subtitle">각도법 + 램지법 + 중국 황실 달력으로 종합 분석</p>
+  </section>
+
+  <!-- Notice Banners -->
+  <div class="notice-strip">
+    <span class="icon">📸</span>
+    <span data-i18n="notice1">임신 10~14주차 초음파 사진을 업로드하시면 예측 정확도가 더욱 높아집니다.</span>
+  </div>
+  <div class="notice-strip">
+    <span class="icon">🔒</span>
+    <span data-i18n="notice2">본 서비스는 사용자의 사진이나 개인정보를 서버에 저장하지 않으며 분석 즉시 폐기합니다.</span>
+  </div>
+  <div class="notice-strip">
+    <span class="icon">⚕️</span>
+    <span data-i18n="notice3">본 결과는 재미와 참고용이며, 의학적 판단을 대체할 수 없습니다.</span>
+  </div>
+
+  <form id="predict-form" enctype="multipart/form-data" novalidate>
+
+    <!-- ── 1. Nub Theory ── -->
+    <div class="float-card section-block">
+      <div class="section-header">
+        <span class="section-badge">01</span>
+        <span class="section-title" data-i18n="nubTitle">각도법 (Nub Theory)</span>
+      </div>
+      <p style="color:var(--muted);font-size:.88rem;margin-bottom:16px;" data-i18n="nubDesc">
+        초음파 이미지를 업로드하면 AI가 생식기 결절 각도를 자동 분석합니다.
+      </p>
+      <div class="upload-zone" id="nub-upload-zone">
+        <input type="file" id="nub-file-input" name="nub_image" accept="image/*" />
+        <div class="upload-icon">🩻</div>
+        <div class="upload-label">
+          <strong data-i18n="uploadHint">클릭하거나 이미지를 드래그하세요</strong><br />
+          <span data-i18n="uploadSub">JPG, PNG, WebP · 최대 10MB</span>
+        </div>
+        <div class="upload-preview" id="nub-preview"><img src="" alt="nub preview" /></div>
+      </div>
+    </div>
+
+    <!-- ── 2. Ramzi Method ── -->
+    <div class="float-card section-block">
+      <div class="section-header">
+        <span class="section-badge">02</span>
+        <span class="section-title" data-i18n="ramziTitle">램지법 (Ramzi Method)</span>
+      </div>
+      <p style="color:var(--muted);font-size:.88rem;margin-bottom:16px;" data-i18n="ramziDesc">
+        초음파 이미지를 업로드하거나 태반 위치를 직접 선택하세요.
+      </p>
+
+      <!-- Manual override -->
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:8px;" data-i18n="ramziManual">직접 선택:</p>
+      <div class="radio-group">
+        <div class="radio-chip">
+          <input type="radio" name="ramzi_manual" id="r-right"  value="right" />
+          <label for="r-right" data-i18n="ramziRight">오른쪽</label>
+        </div>
+        <div class="radio-chip">
+          <input type="radio" name="ramzi_manual" id="r-left"   value="left" />
+          <label for="r-left" data-i18n="ramziLeft">왼쪽</label>
+        </div>
+        <div class="radio-chip">
+          <input type="radio" name="ramzi_manual" id="r-auto"   value="auto" checked />
+          <label for="r-auto" data-i18n="ramziUnknown">모름 (자동 분석)</label>
+        </div>
+      </div>
+
+      <!-- Upload -->
+      <div style="margin-top:16px;">
+        <div class="upload-zone" id="ramzi-upload-zone">
+          <input type="file" id="ramzi-file-input" name="ramzi_image" accept="image/*" />
+          <div class="upload-icon">🩻</div>
+          <div class="upload-label">
+            <strong data-i18n="uploadHint">클릭하거나 이미지를 드래그하세요</strong><br />
+            <span data-i18n="uploadSub">JPG, PNG, WebP · 최대 10MB</span>
+          </div>
+          <div class="upload-preview" id="ramzi-preview"><img src="" alt="ramzi preview" /></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 3. Chinese Imperial Calendar ── -->
+    <div class="float-card section-block">
+      <div class="section-header">
+        <span class="section-badge">03</span>
+        <span class="section-title" data-i18n="calTitle">중국 황실 달력</span>
+      </div>
+      <p style="color:var(--muted);font-size:.88rem;margin-bottom:8px;" data-i18n="calDesc">
+        산모의 만나이(음력)와 임신한 음력 월을 입력하세요.
+      </p>
+      <div class="cal-row">
+        <div class="cal-field">
+          <label for="cal-age" data-i18n="calAge">산모 만나이 (음력)</label>
+          <input type="number" id="cal-age" name="calendar_age" min="18" max="45"
+                 data-i18n-ph="calAge" placeholder="예: 28" />
+        </div>
+        <div class="cal-field">
+          <label for="cal-month" data-i18n="calMonth">임신 음력 월 (1~12)</label>
+          <input type="number" id="cal-month" name="calendar_month" min="1" max="12"
+                 data-i18n-ph="calMonth" placeholder="예: 7" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn-analyze" id="analyze-btn">
+      <span class="btn-text" data-i18n="analyzeBtn">🔮 성별 예측하기</span>
+      <div class="spinner"></div>
+    </button>
+
+  </form>
+
+  <!-- ══════ RESULTS ══════ -->
+  <section id="results-section" class="float-card section-block" style="margin-top:32px;">
+
+    <div class="section-header">
+      <span class="section-badge">✨</span>
+      <span class="section-title" data-i18n="resultTitle">예측 결과</span>
+    </div>
+
+    <!-- Main badge -->
+    <div class="result-headline">
+      <div class="prediction-badge boy" id="prediction-badge">🔵 남아 예측</div>
+    </div>
+
+    <!-- Progress bars -->
+    <div class="prob-bars">
+      <div class="prob-bar-row">
+        <div class="prob-bar-label">🔵 <span data-i18n="boyLabel">남아</span></div>
+        <div class="prob-bar-track">
+          <div class="prob-bar-fill boy" id="bar-boy"></div>
+        </div>
+        <div class="prob-bar-pct" id="pct-boy">—</div>
+      </div>
+      <div class="prob-bar-row">
+        <div class="prob-bar-label">🌸 <span data-i18n="girlLabel">여아</span></div>
+        <div class="prob-bar-track">
+          <div class="prob-bar-fill girl" id="bar-girl"></div>
+        </div>
+        <div class="prob-bar-pct" id="pct-girl">—</div>
+      </div>
+    </div>
+
+    <!-- Method cards -->
+    <div class="method-grid">
+      <div class="method-result-card" id="mc-nub">
+        <div class="m-icon">📐</div>
+        <div class="m-name" data-i18n="methodNub">각도법</div>
+        <div class="m-val none">—</div>
+        <div class="m-sub" style="font-size:.75rem;color:var(--muted);margin-top:2px;"></div>
+      </div>
+      <div class="method-result-card" id="mc-ramzi">
+        <div class="m-icon">🗺️</div>
+        <div class="m-name" data-i18n="methodRamzi">램자법</div>
+        <div class="m-val none">—</div>
+        <div class="m-sub" style="font-size:.75rem;color:var(--muted);margin-top:2px;"></div>
+      </div>
+      <div class="method-result-card" id="mc-cal">
+        <div class="m-icon">📅</div>
+        <div class="m-name" data-i18n="methodCalendar">황실달력</div>
+        <div class="m-val none">—</div>
+      </div>
+    </div>
+
+    <!-- Annotated image -->
+    <div class="annotated-img-wrap" id="annotated-img-wrap" style="display:none;">
+      <p style="font-size:.82rem;color:var(--muted);padding:12px 16px 0;" data-i18n="annoTitle">AI 각도 분석 이미지</p>
+      <img id="annotated-img" src="" alt="annotated ultrasound" style="padding:0 0 0 0;" />
+    </div>
+
+    <!-- Feedback -->
+    <div style="text-align:center;margin-top:28px;">
+      <p style="font-size:.82rem;color:var(--muted);margin-bottom:12px;" data-i18n="feedbackTitle">실제 출산 후 알려주세요!</p>
+      <div class="feedback-row" id="feedback-row">
+        <button class="feedback-btn boy-fb" id="fb-boy" data-i18n="feedbackBoy">실제로 남아였어요 🔵</button>
+        <button class="feedback-btn girl-fb" id="fb-girl" data-i18n="feedbackGirl">실제로 여아였어요 🌸</button>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ══════ FOOTER ══════ -->
+<footer>
+  <div class="container" style="position:relative;">
+    <div class="footer-links">
+      <a href="https://wevwev.tistory.com" target="_blank" rel="noopener">
+        <span data-i18n="creator">제작자</span>: wevwev.tistory.com
+      </a>
+    </div>
+    <p style="color:var(--muted);font-size:.78rem;" data-i18n="notice3">
+      본 결과는 재미와 참고용이며, 의학적 판단을 대체할 수 없습니다.
+    </p>
+    <a href="/admin" class="admin-link">관리자로그인</a>
+  </div>
+</footer>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
