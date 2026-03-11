@@ -483,6 +483,111 @@ footer a:hover { color: var(--accent); }
 }
 .admin-link:hover { color: rgba(255,255,255,0.5) !important; }
 
+/* ── Multi-image Upload Grid ── */
+.upload-multi {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+.upload-slot {
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 120px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--border) !important;
+  background: rgba(255,255,255,0.02) !important;
+  transition: var(--float-transition), border-color 0.2s;
+}
+.upload-slot:hover, .upload-slot.drag-over {
+  border-color: rgba(255,255,255,0.4) !important;
+  background: rgba(255,255,255,0.05) !important;
+}
+.upload-slot input[type="file"] {
+  display: none;
+}
+.slot-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 8px;
+  text-align: center;
+  gap: 6px;
+  width: 100%;
+}
+.slot-placeholder .upload-icon { font-size: 1.8rem; }
+.slot-placeholder .upload-label { font-size: 0.75rem; color: var(--muted); }
+.slot-placeholder strong { font-size: 0.78rem; color: rgba(255,255,255,0.7); }
+.slot-num {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: var(--muted);
+  background: rgba(255,255,255,0.06);
+  border-radius: 20px;
+  padding: 2px 8px;
+}
+.slot-preview {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.slot-preview img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+.slot-remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.slot-remove:hover { background: #c00; }
+
+@media (max-width: 500px) {
+  .upload-multi { grid-template-columns: 1fr 1fr; }
+  .upload-multi .upload-slot:last-child { display: none; }
+}
+
+/* ── Date Input ── */
+input[type="date"] {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: var(--accent);
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s;
+  color-scheme: dark;
+}
+input[type="date"]:focus {
+  outline: none;
+  border-color: rgba(255,255,255,0.5);
+}
+
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
