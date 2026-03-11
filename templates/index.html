@@ -57,14 +57,31 @@
       <p style="color:var(--muted);font-size:.88rem;margin-bottom:16px;" data-i18n="nubDesc">
         초음파 이미지를 업로드하면 AI가 생식기 결절 각도를 자동 분석합니다.
       </p>
-      <div class="upload-zone" id="nub-upload-zone">
-        <input type="file" id="nub-file-input" name="nub_image" accept="image/*" />
-        <div class="upload-icon">🩻</div>
-        <div class="upload-label">
-          <strong data-i18n="uploadHint">클릭하거나 이미지를 드래그하세요</strong><br />
-          <span data-i18n="uploadSub">JPG, PNG, WebP · 최대 10MB</span>
+      <div class="upload-multi" id="nub-upload-multi">
+        <div class="upload-slot float-card" id="nub-slot-0" data-method="nub" data-idx="0">
+          <input type="file" id="nub-file-0" accept="image/*" />
+          <div class="slot-placeholder">
+            <div class="upload-icon">🩻</div>
+            <div class="upload-label"><strong data-i18n="uploadHint">클릭하거나 이미지를 드래그하세요</strong><br /><span class="slot-num">1/3</span></div>
+          </div>
+          <div class="slot-preview" style="display:none;"><img src="" alt="" /><button class="slot-remove" type="button">✕</button></div>
         </div>
-        <div class="upload-preview" id="nub-preview"><img src="" alt="nub preview" /></div>
+        <div class="upload-slot float-card" id="nub-slot-1" data-method="nub" data-idx="1">
+          <input type="file" id="nub-file-1" accept="image/*" />
+          <div class="slot-placeholder">
+            <div class="upload-icon" style="font-size:1.6rem;">＋</div>
+            <div class="upload-label"><span class="slot-num">2/3</span></div>
+          </div>
+          <div class="slot-preview" style="display:none;"><img src="" alt="" /><button class="slot-remove" type="button">✕</button></div>
+        </div>
+        <div class="upload-slot float-card" id="nub-slot-2" data-method="nub" data-idx="2">
+          <input type="file" id="nub-file-2" accept="image/*" />
+          <div class="slot-placeholder">
+            <div class="upload-icon" style="font-size:1.6rem;">＋</div>
+            <div class="upload-label"><span class="slot-num">3/3</span></div>
+          </div>
+          <div class="slot-preview" style="display:none;"><img src="" alt="" /><button class="slot-remove" type="button">✕</button></div>
+        </div>
       </div>
     </div>
 
@@ -96,15 +113,30 @@
       </div>
 
       <!-- Upload -->
-      <div style="margin-top:16px;">
-        <div class="upload-zone" id="ramzi-upload-zone">
-          <input type="file" id="ramzi-file-input" name="ramzi_image" accept="image/*" />
-          <div class="upload-icon">🩻</div>
-          <div class="upload-label">
-            <strong data-i18n="uploadHint">클릭하거나 이미지를 드래그하세요</strong><br />
-            <span data-i18n="uploadSub">JPG, PNG, WebP · 최대 10MB</span>
+      <div class="upload-multi" id="ramzi-upload-multi">
+        <div class="upload-slot float-card" id="ramzi-slot-0" data-method="ramzi" data-idx="0">
+          <input type="file" id="ramzi-file-0" accept="image/*" />
+          <div class="slot-placeholder">
+            <div class="upload-icon">🩻</div>
+            <div class="upload-label"><strong data-i18n="uploadHint">클릭하거나 이미지를 드래그하세요</strong><br /><span class="slot-num">1/3</span></div>
           </div>
-          <div class="upload-preview" id="ramzi-preview"><img src="" alt="ramzi preview" /></div>
+          <div class="slot-preview" style="display:none;"><img src="" alt="" /><button class="slot-remove" type="button">✕</button></div>
+        </div>
+        <div class="upload-slot float-card" id="ramzi-slot-1" data-method="ramzi" data-idx="1">
+          <input type="file" id="ramzi-file-1" accept="image/*" />
+          <div class="slot-placeholder">
+            <div class="upload-icon" style="font-size:1.6rem;">＋</div>
+            <div class="upload-label"><span class="slot-num">2/3</span></div>
+          </div>
+          <div class="slot-preview" style="display:none;"><img src="" alt="" /><button class="slot-remove" type="button">✕</button></div>
+        </div>
+        <div class="upload-slot float-card" id="ramzi-slot-2" data-method="ramzi" data-idx="2">
+          <input type="file" id="ramzi-file-2" accept="image/*" />
+          <div class="slot-placeholder">
+            <div class="upload-icon" style="font-size:1.6rem;">＋</div>
+            <div class="upload-label"><span class="slot-num">3/3</span></div>
+          </div>
+          <div class="slot-preview" style="display:none;"><img src="" alt="" /><button class="slot-remove" type="button">✕</button></div>
         </div>
       </div>
     </div>
@@ -116,18 +148,23 @@
         <span class="section-title" data-i18n="calTitle">중국 황실 달력</span>
       </div>
       <p style="color:var(--muted);font-size:.88rem;margin-bottom:8px;" data-i18n="calDesc">
-        산모의 만나이(음력)와 임신한 음력 월을 입력하세요.
+        산모의 생년월일(양력)을 선택하면 만나이가 자동 계산됩니다.
       </p>
       <div class="cal-row">
         <div class="cal-field">
-          <label for="cal-age" data-i18n="calAge">산모 만나이 (음력)</label>
+          <label for="cal-birthdate" data-i18n="calBirthdate">산모 생년월일 (양력)</label>
+          <input type="date" id="cal-birthdate" name="cal_birthdate" max="2010-01-01" />
+        </div>
+        <div class="cal-field">
+          <label data-i18n="calAgeDisplay">자동 계산된 만나이</label>
           <input type="number" id="cal-age" name="calendar_age" min="18" max="45"
-                 data-i18n-ph="calAge" placeholder="예: 28" />
+                 readonly style="background:rgba(255,255,255,0.03);cursor:not-allowed;" placeholder="—" />
+          <input type="hidden" id="cal-age-hidden" name="calendar_age_send" />
         </div>
         <div class="cal-field">
           <label for="cal-month" data-i18n="calMonth">임신 음력 월 (1~12)</label>
           <input type="number" id="cal-month" name="calendar_month" min="1" max="12"
-                 data-i18n-ph="calMonth" placeholder="예: 7" />
+                 placeholder="예: 7" />
         </div>
       </div>
     </div>
