@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NubScope Admin</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="admin-body">
+
+{% if page == "login" %}
+<!-- ══════ LOGIN ══════ -->
+<div class="login-wrap">
+  <div class="login-card float-card">
+    <h1>🔐 Admin Login</h1>
+    <p>NubScope 관리자 전용 페이지</p>
+
+    {% if error %}
+    <div class="error-msg">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/admin/auth">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="btn-analyze" style="margin-top:20px;">
+        <span class="btn-text">로그인</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+{% else %}
+<!-- ══════ DASHBOARD ══════ -->
+<div class="admin-container">
+
+  <!-- Header -->
+  <div class="admin-header">
+    <h1 class="admin-title">🔭 NubScope Admin</h1>
+    <div class="admin-nav">
+      <a href="/admin/export" class="admin-btn primary">📥 Excel 다운로드</a>
+      <a href="/admin/logout" class="admin-btn">로그아웃</a>
+    </div>
+  </div>
+
+  <!-- ── Stats Grid ── -->
+  <div class="stats-grid">
+
+    <div class="float-card stat-card">
+      <div class="stat-value">{{ total }}</div>
+      <div class="stat-label">누적 참여자 수</div>
+    </div>
+
+    <div class="float-card stat-card">
+      {% if accuracy is not none %}
+      <div class="stat-value">{{ accuracy }}%</div>
+      {% else %}
+      <div class="stat-value" style="font-size:1.2rem;color:var(--muted);">피드백 대기</div>
+      {% endif %}
+      <div class="stat-label">전체 예측 적중률 ({{ feedback_count }}명 피드백)</div>
+    </div>
+
+    <div class="float-card stat-card">
+      <div class="stat-value">{{ boy_count }}</div>
+      <div class="stat-label" style="color:var(--boy);">🔵 남아 예측</div>
+    </div>
+
+    <div class="float-card stat-card">
+      <div class="stat-value">{{ girl_count }}</div>
+      <div class="stat-label" style="color:var(--girl);">🌸 여아 예측</div>
+    </div>
+
+  </div>
+
+  <!-- ── Combination Stats ── -->
+  <div class="float-card section-block" style="margin-bottom:24px;">
+    <div class="section-header">
+      <span class="section-badge">📊</span>
+      <span class="section-title">조합별 통계 (3가지 방법 모두 일치)</span>
+    </div>
+
+    <div class="stats-grid" style="margin-bottom:0;">
+      <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;">
+        <div style="font-size:1.8rem;font-weight:800;">{{ agree_total }}</div>
+        <div style="font-size:.8rem;color:var(--muted);margin-top:4px;">3가지 일치 케이스</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;">
+        {% if agree_accuracy is not none %}
+        <div style="font-size:1.8rem;font-weight:800;color:#7fff7f;">{{ agree_accuracy }}%</div>
+        {% else %}
+        <div style="font-size:1.1rem;font-weight:700;color:var(--muted);">피드백 대기</div>
+        {% endif %}
+        <div style="font-size:.8rem;color:var(--muted);margin-top:4px;">3일치 적중률 ({{ agree_feedback }}명 피드백)</div>
+      </div>
+    </div>
+
+    <p style="font-size:.82rem;color:var(--muted);margin-top:16px;">
+      ℹ️ 각도법, 램지법, 황실달력 3가지 방법이 모두 같은 결과를 가리킬 때의 적중률입니다.
+      실제 출산 후 피드백을 받아야 통계가 업데이트됩니다.
+    </p>
+  </div>
+
+  <!-- ── Recent Records ── -->
+  <div class="float-card section-block">
+    <div class="section-header">
+      <span class="section-badge">📋</span>
+      <span class="section-title">최근 20건 데이터</span>
+    </div>
+
+    {% if recent %}
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>일시</th>
+            <th>각도법</th>
+            <th>각도</th>
+            <th>램지법</th>
+            <th>태반위치</th>
+            <th>황실달력</th>
+            <th>나이</th>
+            <th>월</th>
+            <th>남아확률</th>
+            <th>여아확률</th>
+            <th>최종예측</th>
+            <th>실제성별</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in recent %}
+          <tr>
+            <td>{{ row['id'] }}</td>
+            <td style="white-space:nowrap;font-size:.76rem;">{{ row['created_at'][:16] if row['created_at'] else '—' }}</td>
+            <td>
+              {% if row['nub_result'] == 'boy' %}<span style="color:var(--boy);">남아</span>
+              {% elif row['nub_result'] == 'girl' %}<span style="color:var(--girl);">여아</span>
+              {% else %}—{% endif %}
+            </td>
+            <td>{{ row['nub_angle'] ~ '°' if row['nub_angle'] else '—' }}</td>
+            <td>
+              {% if row['ramzi_result'] == 'boy' %}<span style="color:var(--boy);">남아</span>
+              {% elif row['ramzi_result'] == 'girl' %}<span style="color:var(--girl);">여아</span>
+              {% else %}—{% endif %}
+            </td>
+            <td>
+              {% if row['ramzi_position'] == 'right' %}오른쪽
+              {% elif row['ramzi_position'] == 'left' %}왼쪽
+              {% else %}—{% endif %}
+            </td>
+            <td>
+              {% if row['calendar_result'] == 'boy' %}<span style="color:var(--boy);">남아</span>
+              {% elif row['calendar_result'] == 'girl' %}<span style="color:var(--girl);">여아</span>
+              {% else %}—{% endif %}
+            </td>
+            <td>{{ row['calendar_age'] or '—' }}</td>
+            <td>{{ row['calendar_month'] or '—' }}</td>
+            <td><strong>{{ row['boy_prob'] ~ '%' if row['boy_prob'] is not none else '—' }}</strong></td>
+            <td><strong>{{ row['girl_prob'] ~ '%' if row['girl_prob'] is not none else '—' }}</strong></td>
+            <td>
+              {% if row['final_pred'] == 'boy' %}<span style="color:var(--boy);font-weight:700;">🔵 남아</span>
+              {% elif row['final_pred'] == 'girl' %}<span style="color:var(--girl);font-weight:700;">🌸 여아</span>
+              {% else %}—{% endif %}
+            </td>
+            <td>
+              {% if row['actual_gender'] == 'boy' %}<span style="color:var(--boy);">🔵</span>
+              {% elif row['actual_gender'] == 'girl' %}<span style="color:var(--girl);">🌸</span>
+              {% else %}<span style="color:var(--muted);">대기</span>{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p style="color:var(--muted);font-size:.9rem;text-align:center;padding:32px;">
+      아직 데이터가 없습니다. 서비스를 이용한 사용자 데이터가 여기에 표시됩니다.
+    </p>
+    {% endif %}
+  </div>
+
+</div>
+{% endif %}
+
+</body>
+</html>
